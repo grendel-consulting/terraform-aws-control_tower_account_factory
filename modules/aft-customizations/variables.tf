@@ -77,6 +77,10 @@ variable "aft_config_backend_bucket_id" {
   type = string
 }
 
+variable "aft_feature_disable_private_networking" {
+  type = bool
+}
+
 variable "aft_vpc_id" {
   type = string
 }

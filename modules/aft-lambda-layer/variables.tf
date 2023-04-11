@@ -37,8 +37,16 @@ variable "aft_kms_key_arn" {
   type = string
 }
 
+variable "aft_feature_disable_private_networking" {
+  type = bool
+}
+
 variable "aft_vpc_id" {
   type = string
+}
+
+variable "aft_vpc_public_subnets" {
+  type = list(string)
 }
 
 variable "aft_vpc_private_subnets" {
@@ -48,6 +56,7 @@ variable "aft_vpc_private_subnets" {
 variable "aft_vpc_default_sg" {
   type = list(string)
 }
+
 variable "aft_version" {
   type = string
 }

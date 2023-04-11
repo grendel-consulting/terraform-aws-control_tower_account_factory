@@ -17,6 +17,10 @@ variable "aft_common_layer_arn" {
   type = string
 }
 
+variable "aft_feature_disable_private_networking" {
+  type = bool
+}
+
 variable "aft_vpc_cidr" {
   type = string
 }
