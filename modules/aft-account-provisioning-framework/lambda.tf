@@ -12,7 +12,7 @@ resource "aws_lambda_function" "create_role" {
   handler          = "aft_account_provisioning_framework_create_role.lambda_handler"
   source_code_hash = var.provisioning_framework_archive_hash
   memory_size      = 1024
-  runtime          = "python3.9"
+  runtime          = var.lambda_runtime_python_version
   timeout          = 300
   layers           = [var.aft_common_layer_arn]
 
@@ -42,7 +42,7 @@ resource "aws_lambda_function" "tag_account" {
   handler          = "aft_account_provisioning_framework_tag_account.lambda_handler"
   source_code_hash = var.provisioning_framework_archive_hash
   memory_size      = 1024
-  runtime          = "python3.9"
+  runtime          = var.lambda_runtime_python_version
   timeout          = 300
   layers           = [var.aft_common_layer_arn]
 
@@ -71,7 +71,7 @@ resource "aws_lambda_function" "persist_metadata" {
   handler          = "aft_account_provisioning_framework_persist_metadata.lambda_handler"
   source_code_hash = var.provisioning_framework_archive_hash
   memory_size      = 1024
-  runtime          = "python3.9"
+  runtime          = var.lambda_runtime_python_version
   timeout          = 300
   layers           = [var.aft_common_layer_arn]
 
@@ -102,7 +102,7 @@ resource "aws_lambda_function" "account_metadata_ssm" {
   handler          = "aft_account_provisioning_framework_account_metadata_ssm.lambda_handler"
   source_code_hash = var.provisioning_framework_archive_hash
   memory_size      = 1024
-  runtime          = "python3.9"
+  runtime          = var.lambda_runtime_python_version
   timeout          = 300
   layers           = [var.aft_common_layer_arn]
 
