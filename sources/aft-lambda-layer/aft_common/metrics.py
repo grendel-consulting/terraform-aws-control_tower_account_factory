@@ -141,7 +141,7 @@ class AFTMetrics:
 
             payload = self.wrap_event_for_api(aft_management_session, event)
 
-            response = requests.post(self.api_endpoint, json=payload)
+            response = requests.post(self.api_endpoint, json=payload, timeout=60)
 
         return None
 
