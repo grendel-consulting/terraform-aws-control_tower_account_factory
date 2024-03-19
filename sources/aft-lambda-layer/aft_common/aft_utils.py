@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 import logging
-import random
 import time
 from functools import wraps
 from typing import (
@@ -22,6 +21,7 @@ from boto3.session import Session
 from botocore.config import Config
 from botocore.exceptions import ClientError
 from botocore.response import StreamingBody
+import secrets
 
 if TYPE_CHECKING:
     from mypy_boto3_lambda import LambdaClient
@@ -68,7 +68,7 @@ def resubmit_request_on_boto_throttle(
     @wraps(func)
     def wrapper(*args: Optional[Tuple[Any]], **kwargs: Optional[Dict[str, Any]]) -> Any:
         jitter = float(
-            f"{random.random():.3f}"  # nosec B311: Not using random numbers in a security context
+            f"{secrets.SystemRandom().random():.3f}"  # nosec B311: Not using random numbers in a security context
         )
         retry_sleep_sec = min(2 + jitter, max_sleep_sec)
 
