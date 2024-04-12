@@ -239,7 +239,7 @@ class OrganizationsAgent:
     def account_is_member_of_root(self, account_id: str) -> bool:
         # Handles (future) multi-parent case
         account_parents = self.get_parents_from_account_id(account_id=account_id)
-        return any([parent["Type"] == "ROOT" for parent in account_parents])
+        return any(parent["Type"] == "ROOT" for parent in account_parents)
 
     def ou_contains_account(self, ou_name: str, account_id: str) -> bool:
         # NOTE: Assumes single-parent accounts
