@@ -110,7 +110,7 @@ def put_audit_record(
     current_time = datetime.now().strftime(datetime_format)
     item["timestamp"] = {"S": current_time}
     item["ddb_event_name"] = {"S": event_name}
-    logger.info("Inserting item into " + table + " table: " + str(item))
+    logger.info("Inserting item into %s table: %s", table, str(item))
     response = dynamodb.put_item(TableName=table, Item=item)
     logger.info(response)
     return response
@@ -193,8 +193,7 @@ def create_new_account(
         provisioning_parameters.append({"Key": k, "Value": v})
 
     logger.info(
-        "Creating new account leveraging parameters: " + str(provisioning_parameters)
-    )
+        "Creating new account leveraging parameters: %s", str(provisioning_parameters))
     provisioned_product_name = create_provisioned_product_name(
         account_name=request["control_tower_parameters"]["AccountName"]
     )

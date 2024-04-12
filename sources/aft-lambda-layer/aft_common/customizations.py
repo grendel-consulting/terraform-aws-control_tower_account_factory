@@ -72,19 +72,19 @@ def filter_non_aft_accounts(
 ) -> List[str]:
     aft_accounts = get_all_aft_account_ids(session)
     core_accounts = get_core_accounts(session)
-    logger.info("Running AFT Filter for accounts " + str(account_list))
+    logger.info("Running AFT Filter for accounts %s", str(account_list))
     filtered_accounts = []
     for a in account_list:
         logger.info("Evaluating account " + a)
         if a not in aft_accounts:
             if operation == "include":
                 if a not in core_accounts:
-                    logger.info("Account " + a + " is being filtered.")
+                    logger.info("Account %s is being filtered.", a)
                     filtered_accounts.append(a)
                 else:
-                    logger.info("Account " + a + " is NOT being filtered.")
+                    logger.info("Account %s is NOT being filtered.", a)
         else:
-            logger.info("Account " + a + " is NOT being filtered.")
+            logger.info("Account %s is NOT being filtered.", a)
     for a in filtered_accounts:
         if a in account_list:
             account_list.remove(a)
@@ -100,7 +100,7 @@ def get_core_accounts(aft_management_session: Session) -> List[str]:
         )
         logger.info("Account ID for " + a + " is " + id)
         core_accounts.append(id)
-    logger.info("Core accounts: " + str(core_accounts))
+    logger.info("Core accounts: %s", str(core_accounts))
     return core_accounts
 
 
@@ -108,7 +108,7 @@ def get_core_accounts(aft_management_session: Session) -> List[str]:
 def get_accounts_by_tags(
     aft_mgmt_session: Session, ct_mgmt_session: Session, tags: List[Dict[str, str]]
 ) -> Optional[List[str]]:
-    logger.info("Getting Account with tags - " + str(tags))
+    logger.info("Getting Account with tags - %s", str(tags))
     # Get all AFT Managed Accounts
     all_accounts = get_all_aft_account_ids(aft_mgmt_session)
     matched_accounts = []
@@ -125,7 +125,7 @@ def get_accounts_by_tags(
         # Format tags as a dictionary rather than a list
         for t in response["Tags"]:
             account_tags[t["Key"]] = t["Value"]
-        logger.info("Account tags for " + a + ": " + str(account_tags))
+        logger.info("Account tags for %s: %s", a, str(account_tags))
         counter = 0
         # Loop through tag filter. Append account to matched_accounts if all tags in filter match/ are present
         for x in tags:
@@ -135,8 +135,7 @@ def get_accounts_by_tags(
                         counter += 1
                         if counter == len(tags):
                             logger.info(
-                                "Account " + a + " MATCHED with tags " + str(tags)
-                            )
+                                "Account %s MATCHED with tags %s", a, str(tags))
                             matched_accounts.append(a)
     logger.info(matched_accounts)
     if len(matched_accounts) > 0:
@@ -152,7 +151,7 @@ def get_included_accounts(
     included: List[Dict[str, Any]],
 ) -> List[str]:
     all_aft_accounts = get_all_aft_account_ids(aft_management_session)
-    logger.info("All AFT accounts: " + str(all_aft_accounts))
+    logger.info("All AFT accounts: %s", str(all_aft_accounts))
     included_accounts = []
     for d in included:
         if d["type"] == "all":
@@ -175,14 +174,14 @@ def get_included_accounts(
             included_accounts.extend(d["target_value"])
     # Remove Duplicates
     included_accounts = list(set(included_accounts))
-    logger.info("Included Accounts (pre-AFT filter): " + str(included_accounts))
+    logger.info("Included Accounts (pre-AFT filter): %s", str(included_accounts))
 
     # Filter non-AFT accounts
     included_accounts = filter_non_aft_accounts(
         aft_management_session, included_accounts
     )
 
-    logger.info("Included Accounts (post-AFT filter): " + str(included_accounts))
+    logger.info("Included Accounts (post-AFT filter): %s", str(included_accounts))
     return included_accounts
 
 
@@ -211,14 +210,14 @@ def get_excluded_accounts(
             excluded_accounts.extend(d["target_value"])
     # Remove Duplicates
     excluded_accounts = list(set(excluded_accounts))
-    logger.info("Excluded Accounts (pre-AFT filter): " + str(excluded_accounts))
+    logger.info("Excluded Accounts (pre-AFT filter): %s", str(excluded_accounts))
 
     # Filter non-AFT accounts
     excluded_accounts = filter_non_aft_accounts(
         aft_management_session, excluded_accounts, "exclude"
     )
 
-    logger.info("Excluded Accounts (post-AFT filter): " + str(excluded_accounts))
+    logger.info("Excluded Accounts (post-AFT filter): %s", str(excluded_accounts))
     return excluded_accounts
 
 
@@ -228,5 +227,5 @@ def get_target_accounts(
     for i in excluded_accounts:
         if i in included_accounts:
             included_accounts.remove(i)
-    logger.info("TARGET ACCOUNTS: " + str(included_accounts))
+    logger.info("TARGET ACCOUNTS: %s", str(included_accounts))
     return included_accounts

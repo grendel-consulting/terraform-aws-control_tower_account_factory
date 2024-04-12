@@ -61,7 +61,7 @@ def ct_provisioning_artifact_is_active(
         )
         provisioning_artifact = response["ProvisioningArtifactDetail"]
     except client.exceptions.ResourceNotFoundException:
-        logger.info("Provisioning artifact id: " + artifact_id + " does not exist")
+        logger.info("Provisioning artifact id: %s does not exist", artifact_id)
         return False
 
     if provisioning_artifact["Active"]:

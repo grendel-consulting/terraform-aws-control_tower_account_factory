@@ -97,7 +97,7 @@ def list_pipelines(session: Session) -> List[Any]:
         if re.match(pattern, p["name"]):
             matched_pipelines.append(p["name"])
 
-    logger.info("The following pipelines were matched: " + str(matched_pipelines))
+    logger.info("The following pipelines were matched: %s", str(matched_pipelines))
     return matched_pipelines
 
 
@@ -126,7 +126,7 @@ def get_running_pipeline_count(session: Session, pipeline_names: List[str]) -> i
             if latest_execution["status"] == "InProgress":
                 pipeline_counter += 1
 
-    logger.info("The number of running pipelines is " + str(pipeline_counter))
+    logger.info("The number of running pipelines is %s", str(pipeline_counter))
 
     return pipeline_counter
 

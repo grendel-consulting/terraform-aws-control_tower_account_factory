@@ -29,7 +29,7 @@ def get_aws_regions(client: EC2Client) -> List[str]:
     for r in response["Regions"]:
         region_list.append(r["RegionName"])
 
-    logger.info("Found " + str(len(region_list)) + " regions: " + str(region_list))
+    logger.info("Found %s regions: %s", str(len(region_list)), str(region_list))
     return region_list
 
 
@@ -74,7 +74,7 @@ def get_vpc_internet_gateways(resource: EC2ServiceResource, vpc: str) -> List[st
     igws = []
     for i in vpc_resource.internet_gateways.all():
         igws.append(i.id)
-    logger.info("SGs: " + str(igws))
+    logger.info("SGs: %s", str(igws))
     return igws
 
 
@@ -92,7 +92,7 @@ def get_vpc_subnets(resource: EC2ServiceResource, vpc: str) -> List[str]:
     subnets = []
     for s in vpc_resource.subnets.all():
         subnets.append(s.id)
-    logger.info("Subnets: " + str(subnets))
+    logger.info("Subnets: %s", str(subnets))
     return subnets
 
 
@@ -110,7 +110,7 @@ def get_vpc_route_tables(resource: EC2ServiceResource, vpc: str) -> List[str]:
     route_tables = []
     for rt in vpc_resource.route_tables.all():
         route_tables.append(rt.id)
-    logger.info("Route tables: " + str(route_tables))
+    logger.info("Route tables: %s", str(route_tables))
     return route_tables
 
 
@@ -137,7 +137,7 @@ def get_vpc_acls(resource: EC2ServiceResource, vpc: str) -> List[str]:
     acls = []
     for a in vpc_resource.network_acls.all():
         acls.append(a.id)
-    logger.info("ACLs: " + str(acls))
+    logger.info("ACLs: %s", str(acls))
     return acls
 
 
@@ -160,7 +160,7 @@ def get_vpc_security_groups(resource: EC2ServiceResource, vpc: str) -> List[str]
     sgs = []
     for s in vpc_resource.security_groups.all():
         sgs.append(s.id)
-    logger.info("SGs: " + str(sgs))
+    logger.info("SGs: %s", str(sgs))
     return sgs
 
 
@@ -183,7 +183,7 @@ def delete_security_groups(client: EC2Client, security_groups: List[str]) -> Non
 
 def trail_exists(session: Session) -> bool:
     client: CloudTrailClient = session.client("cloudtrail")
-    logger.info("Checking for trail " + CLOUDTRAIL_TRAIL_NAME)
+    logger.info("Checking for trail %s", CLOUDTRAIL_TRAIL_NAME)
     try:
         client.get_trail(Name=CLOUDTRAIL_TRAIL_NAME)
         logger.info("Trail already exists")
@@ -195,7 +195,7 @@ def trail_exists(session: Session) -> bool:
 
 def event_selectors_exists(session: Session) -> bool:
     client = session.client("cloudtrail")
-    logger.info("Getting event selectors for " + CLOUDTRAIL_TRAIL_NAME)
+    logger.info("Getting event selectors for %s", CLOUDTRAIL_TRAIL_NAME)
     response = client.get_event_selectors(TrailName=CLOUDTRAIL_TRAIL_NAME)
     if "AdvancedEventSelectors" not in response:
         logger.info("No Advanced Event Selectors Found")
@@ -208,7 +208,7 @@ def event_selectors_exists(session: Session) -> bool:
 
 def trail_is_logging(session: Session) -> bool:
     client = session.client("cloudtrail")
-    logger.info("Getting logging status for " + CLOUDTRAIL_TRAIL_NAME)
+    logger.info("Getting logging status for %s", CLOUDTRAIL_TRAIL_NAME)
     response = client.get_trail_status(Name=CLOUDTRAIL_TRAIL_NAME)
     is_logging: bool = response["IsLogging"]
     return is_logging
@@ -216,7 +216,7 @@ def trail_is_logging(session: Session) -> bool:
 
 def start_logging(session: Session) -> None:
     client = session.client("cloudtrail")
-    logger.info("Starting Logging for " + CLOUDTRAIL_TRAIL_NAME)
+    logger.info("Starting Logging for %s", CLOUDTRAIL_TRAIL_NAME)
     client.start_logging(Name=CLOUDTRAIL_TRAIL_NAME)
 
 
