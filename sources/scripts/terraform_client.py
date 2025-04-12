@@ -6,6 +6,7 @@ import os
 import time
 
 import requests
+from security import safe_requests
 
 TERRAFORM_API_ENDPOINT = ""
 LOCAL_CONFIGURATION_PATH = ""
@@ -28,7 +29,7 @@ def check_workspace_exists(organization_name, workspace_name, api_token):
     )
     headers = __build_standard_headers(api_token)
     tf_dist = os.environ.get("TF_DISTRIBUTION")
-    response = requests.get(endpoint, headers=headers, verify=tf_dist != "tfe")
+    response = safe_requests.get(endpoint, headers=headers, verify=tf_dist != "tfe")
     data = response.json()
 
     if "data" in data.keys():
@@ -227,7 +228,7 @@ def __patch(endpoint, headers, payload):
 
 def __get(endpoint, headers):
     tf_dist = os.environ.get("TF_DISTRIBUTION")
-    response = requests.get(endpoint, headers=headers, verify=tf_dist != "tfe")
+    response = safe_requests.get(endpoint, headers=headers, verify=tf_dist != "tfe")
     __handle_errors(response)
     return response.json()
 
