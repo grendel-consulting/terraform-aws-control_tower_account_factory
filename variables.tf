@@ -375,7 +375,7 @@ variable "terraform_api_endpoint" {
 variable "aft_enable_vpc" {
   description = "Flag turning use of VPC on/off for AFT"
   type        = bool
-  default     = false
+  default     = true
   validation {
     condition     = contains([true, false], var.aft_enable_vpc)
     error_message = "Valid values for var: aft_enable_vpc are (true, false)."

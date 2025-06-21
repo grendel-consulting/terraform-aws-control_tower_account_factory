@@ -157,7 +157,6 @@ module "aft_feature_options" {
   aft_common_layer_arn                      = module.aft_lambda_layer.layer_version_arn
   aft_sns_topic_arn                         = module.aft_account_request_framework.sns_topic_arn
   aft_failure_sns_topic_arn                 = module.aft_account_request_framework.failure_sns_topic_arn
-  aft_vpc_public_subnets                    = module.aft_account_request_framework.aft_vpc_public_subnets
   aft_vpc_private_subnets                   = module.aft_account_request_framework.aft_vpc_private_subnets
   aft_vpc_default_sg                        = module.aft_account_request_framework.aft_vpc_default_sg
   log_archive_account_id                    = var.log_archive_account_id
@@ -196,7 +195,6 @@ module "aft_lambda_layer" {
   aws_region                                        = var.ct_home_region
   aft_kms_key_arn                                   = module.aft_account_request_framework.aft_kms_key_arn
   aft_vpc_id                                        = module.aft_account_request_framework.aft_vpc_id
-  aft_vpc_public_subnets                            = module.aft_account_request_framework.aft_vpc_public_subnets
   aft_vpc_private_subnets                           = module.aft_account_request_framework.aft_vpc_private_subnets
   aft_vpc_default_sg                                = module.aft_account_request_framework.aft_vpc_default_sg
   s3_bucket_name                                    = module.aft_customizations.aft_codepipeline_customizations_bucket_name

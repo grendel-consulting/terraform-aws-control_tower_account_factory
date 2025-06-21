@@ -46,10 +46,6 @@ variable "aft_vpc_id" {
   default = null
 }
 
-variable "aft_vpc_public_subnets" {
-  type = list(string)
-}
-
 variable "aft_vpc_private_subnets" {
   type    = list(string)
   default = null
