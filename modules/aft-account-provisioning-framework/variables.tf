@@ -37,20 +37,14 @@ variable "aft_features_sfn_name" {
   type = string
 }
 
-variable "aft_feature_disable_private_networking" {
-  type = bool
-}
-
-variable "aft_vpc_public_subnets" {
-  type = list(string)
-}
-
 variable "aft_vpc_private_subnets" {
-  type = list(string)
+  type    = list(string)
+  default = null
 }
 
 variable "aft_vpc_default_sg" {
-  type = list(string)
+  type    = list(string)
+  default = null
 }
 
 variable "provisioning_framework_archive_path" {
@@ -91,4 +85,8 @@ variable "enable_cloudtrail_lambda_function_name" {
 
 variable "lambda_runtime_python_version" {
   type = string
+}
+
+variable "aft_enable_vpc" {
+  type = bool
 }

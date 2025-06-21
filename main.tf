@@ -18,8 +18,7 @@ module "aft_account_provisioning_framework" {
   aft_failure_sns_topic_arn                        = module.aft_account_request_framework.aft_failure_sns_topic_arn
   aft_common_layer_arn                             = module.aft_lambda_layer.layer_version_arn
   aft_kms_key_arn                                  = module.aft_account_request_framework.aft_kms_key_arn
-  aft_feature_disable_private_networking           = var.aft_feature_disable_private_networking
-  aft_vpc_public_subnets                           = module.aft_account_request_framework.aft_vpc_public_subnets
+  aft_enable_vpc                                   = module.aft_account_request_framework.vpc_deployment
   aft_vpc_private_subnets                          = module.aft_account_request_framework.aft_vpc_private_subnets
   aft_vpc_default_sg                               = module.aft_account_request_framework.aft_vpc_default_sg
   cloudwatch_log_group_retention                   = var.cloudwatch_log_group_retention
@@ -45,7 +44,7 @@ module "aft_account_request_framework" {
   aft_account_provisioning_framework_sfn_name = local.aft_account_provisioning_framework_sfn_name
   aft_common_layer_arn                        = module.aft_lambda_layer.layer_version_arn
   cloudwatch_log_group_retention              = var.cloudwatch_log_group_retention
-  aft_feature_disable_private_networking      = var.aft_feature_disable_private_networking
+  aft_enable_vpc                              = var.aft_enable_vpc
   aft_vpc_cidr                                = var.aft_vpc_cidr
   aft_vpc_private_subnet_01_cidr              = var.aft_vpc_private_subnet_01_cidr
   aft_vpc_private_subnet_02_cidr              = var.aft_vpc_private_subnet_02_cidr
@@ -56,18 +55,21 @@ module "aft_account_request_framework" {
   request_framework_archive_path              = module.packaging.request_framework_archive_path
   request_framework_archive_hash              = module.packaging.request_framework_archive_hash
   lambda_runtime_python_version               = local.lambda_runtime_python_version
+  backup_recovery_point_retention             = var.backup_recovery_point_retention
+  aft_customer_vpc_id                         = var.aft_customer_vpc_id
+  aft_customer_private_subnets                = var.aft_customer_private_subnets
 }
-
-
 
 module "aft_backend" {
   providers = {
     aws.primary_region   = aws.aft_management
     aws.secondary_region = aws.tf_backend_secondary_region
   }
-  source           = "./modules/aft-backend"
-  primary_region   = var.ct_home_region
-  secondary_region = var.tf_backend_secondary_region
+  source                                                = "./modules/aft-backend"
+  primary_region                                        = var.ct_home_region
+  secondary_region                                      = var.tf_backend_secondary_region
+  aft_management_account_id                             = var.aft_management_account_id
+  aft_backend_bucket_access_logs_object_expiration_days = var.aft_backend_bucket_access_logs_object_expiration_days
 }
 
 module "aft_code_repositories" {
@@ -82,7 +84,6 @@ module "aft_code_repositories" {
   account_request_table_name                      = module.aft_account_request_framework.request_table_name
   codepipeline_s3_bucket_arn                      = module.aft_customizations.aft_codepipeline_customizations_bucket_arn
   codepipeline_s3_bucket_name                     = module.aft_customizations.aft_codepipeline_customizations_bucket_name
-  aft_feature_disable_private_networking          = var.aft_feature_disable_private_networking
   security_group_ids                              = module.aft_account_request_framework.aft_vpc_default_sg
   subnet_ids                                      = module.aft_account_request_framework.aft_vpc_private_subnets
   aft_key_arn                                     = module.aft_account_request_framework.aft_kms_key_arn
@@ -91,6 +92,7 @@ module "aft_code_repositories" {
   account_customizations_repo_name                = var.account_customizations_repo_name
   global_customizations_repo_name                 = var.global_customizations_repo_name
   github_enterprise_url                           = var.github_enterprise_url
+  gitlab_selfmanaged_url                          = var.gitlab_selfmanaged_url
   vcs_provider                                    = var.vcs_provider
   terraform_distribution                          = var.terraform_distribution
   account_provisioning_customizations_repo_name   = var.account_provisioning_customizations_repo_name
@@ -99,6 +101,7 @@ module "aft_code_repositories" {
   global_customizations_repo_branch               = var.global_customizations_repo_branch
   log_group_retention                             = var.cloudwatch_log_group_retention
   global_codebuild_timeout                        = var.global_codebuild_timeout
+  aft_enable_vpc                                  = module.aft_account_request_framework.vpc_deployment
 }
 
 module "aft_customizations" {
@@ -119,7 +122,6 @@ module "aft_customizations" {
   aft_sns_topic_arn                                 = module.aft_account_request_framework.sns_topic_arn
   aft_failure_sns_topic_arn                         = module.aft_account_request_framework.failure_sns_topic_arn
   request_metadata_table_name                       = module.aft_account_request_framework.request_metadata_table_name
-  aft_feature_disable_private_networking            = var.aft_feature_disable_private_networking
   aft_vpc_id                                        = module.aft_account_request_framework.aft_vpc_id
   aft_vpc_private_subnets                           = module.aft_account_request_framework.aft_vpc_private_subnets
   aft_vpc_default_sg                                = module.aft_account_request_framework.aft_vpc_default_sg
@@ -135,6 +137,7 @@ module "aft_customizations" {
   customizations_archive_hash                       = module.packaging.customizations_archive_hash
   global_codebuild_timeout                          = var.global_codebuild_timeout
   lambda_runtime_python_version                     = local.lambda_runtime_python_version
+  aft_enable_vpc                                    = module.aft_account_request_framework.vpc_deployment
 }
 
 module "aft_feature_options" {
@@ -147,14 +150,13 @@ module "aft_feature_options" {
   source                                    = "./modules/aft-feature-options"
   log_archive_access_logs_bucket_name       = local.log_archive_access_logs_bucket_name
   log_archive_bucket_name                   = local.log_archive_bucket_name
-  log_archive_bucket_object_expiration_days = local.log_archive_bucket_object_expiration_days
+  log_archive_bucket_object_expiration_days = var.log_archive_bucket_object_expiration_days
   aft_features_sfn_name                     = local.aft_features_sfn_name
   aft_kms_key_arn                           = module.aft_account_request_framework.aft_kms_key_arn
   aft_kms_key_id                            = module.aft_account_request_framework.aft_kms_key_id
   aft_common_layer_arn                      = module.aft_lambda_layer.layer_version_arn
   aft_sns_topic_arn                         = module.aft_account_request_framework.sns_topic_arn
   aft_failure_sns_topic_arn                 = module.aft_account_request_framework.failure_sns_topic_arn
-  aft_feature_disable_private_networking    = var.aft_feature_disable_private_networking
   aft_vpc_public_subnets                    = module.aft_account_request_framework.aft_vpc_public_subnets
   aft_vpc_private_subnets                   = module.aft_account_request_framework.aft_vpc_private_subnets
   aft_vpc_default_sg                        = module.aft_account_request_framework.aft_vpc_default_sg
@@ -166,6 +168,7 @@ module "aft_feature_options" {
   enroll_support_lambda_function_name       = local.enroll_support_lambda_function_name
   enable_cloudtrail_lambda_function_name    = local.enable_cloudtrail_lambda_function_name
   lambda_runtime_python_version             = local.lambda_runtime_python_version
+  aft_enable_vpc                            = module.aft_account_request_framework.vpc_deployment
 }
 
 module "aft_iam_roles" {
@@ -192,7 +195,6 @@ module "aft_lambda_layer" {
   aft_tf_aws_customizations_module_url_ssm_path     = local.ssm_paths.aft_tf_aws_customizations_module_url_ssm_path
   aws_region                                        = var.ct_home_region
   aft_kms_key_arn                                   = module.aft_account_request_framework.aft_kms_key_arn
-  aft_feature_disable_private_networking            = var.aft_feature_disable_private_networking
   aft_vpc_id                                        = module.aft_account_request_framework.aft_vpc_id
   aft_vpc_public_subnets                            = module.aft_account_request_framework.aft_vpc_public_subnets
   aft_vpc_private_subnets                           = module.aft_account_request_framework.aft_vpc_private_subnets
@@ -200,6 +202,8 @@ module "aft_lambda_layer" {
   s3_bucket_name                                    = module.aft_customizations.aft_codepipeline_customizations_bucket_name
   builder_archive_path                              = module.packaging.builder_archive_path
   builder_archive_hash                              = module.packaging.builder_archive_hash
+  cloudwatch_log_group_retention                    = var.cloudwatch_log_group_retention
+  aft_enable_vpc                                    = module.aft_account_request_framework.vpc_deployment
 }
 
 module "aft_ssm_parameters" {
@@ -229,7 +233,7 @@ module "aft_ssm_parameters" {
   aft_customizations_identify_targets_function_arn            = module.aft_customizations.aft_customizations_identify_targets_function_arn
   aft_customizations_execute_pipeline_function_arn            = module.aft_customizations.aft_customizations_execute_pipeline_function_arn
   aft_customizations_get_pipeline_executions_function_arn     = module.aft_customizations.aft_customizations_get_pipeline_executions_function_arn
-  codestar_connection_arn                                     = module.aft_code_repositories.codestar_connection_arn
+  codeconnections_connection_arn                              = module.aft_code_repositories.codeconnections_connection_arn
   aft_log_key_arn                                             = module.aft_feature_options.aws_aft_log_key_arn
   aft_logging_bucket_arn                                      = module.aft_feature_options.aws_aft_logs_s3_bucket_arn
   aft_config_backend_bucket_id                                = module.aft_backend.bucket_id
@@ -257,6 +261,7 @@ module "aft_ssm_parameters" {
   terraform_token                                             = var.terraform_token # Null default value #tfsec:ignore:general-secrets-no-plaintext-exposure
   terraform_version                                           = var.terraform_version
   terraform_org_name                                          = var.terraform_org_name
+  terraform_project_name                                      = var.terraform_project_name
   aft_feature_cloudtrail_data_events                          = var.aft_feature_cloudtrail_data_events
   aft_feature_enterprise_support                              = var.aft_feature_enterprise_support
   aft_feature_delete_default_vpcs_enabled                     = var.aft_feature_delete_default_vpcs_enabled
@@ -268,5 +273,6 @@ module "aft_ssm_parameters" {
   account_provisioning_customizations_repo_branch             = var.account_provisioning_customizations_repo_branch
   maximum_concurrent_customizations                           = var.maximum_concurrent_customizations
   github_enterprise_url                                       = var.github_enterprise_url
+  gitlab_selfmanaged_url                                      = var.gitlab_selfmanaged_url
   aft_metrics_reporting                                       = var.aft_metrics_reporting
 }

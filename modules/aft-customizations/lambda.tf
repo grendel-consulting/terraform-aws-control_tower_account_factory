@@ -18,7 +18,8 @@ resource "aws_lambda_function" "aft_customizations_identify_targets" {
   layers           = [var.aft_common_layer_arn]
 
   dynamic "vpc_config" {
-    for_each = var.aft_feature_disable_private_networking ? {} : { k = "v" }
+    for_each = var.aft_enable_vpc ? [1] : []
+
     content {
       subnet_ids         = var.aft_vpc_private_subnets
       security_group_ids = var.aft_vpc_default_sg
@@ -49,7 +50,8 @@ resource "aws_lambda_function" "aft_customizations_execute_pipeline" {
   layers           = [var.aft_common_layer_arn]
 
   dynamic "vpc_config" {
-    for_each = var.aft_feature_disable_private_networking ? {} : { k = "v" }
+    for_each = var.aft_enable_vpc ? [1] : []
+
     content {
       subnet_ids         = var.aft_vpc_private_subnets
       security_group_ids = var.aft_vpc_default_sg
@@ -79,7 +81,8 @@ resource "aws_lambda_function" "aft_customizations_get_pipeline_executions" {
   layers           = [var.aft_common_layer_arn]
 
   dynamic "vpc_config" {
-    for_each = var.aft_feature_disable_private_networking ? {} : { k = "v" }
+    for_each = var.aft_enable_vpc ? [1] : []
+
     content {
       subnet_ids         = var.aft_vpc_private_subnets
       security_group_ids = var.aft_vpc_default_sg

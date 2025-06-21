@@ -17,32 +17,34 @@ variable "aft_common_layer_arn" {
   type = string
 }
 
-variable "aft_feature_disable_private_networking" {
-  type = bool
-}
-
 variable "aft_vpc_cidr" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "aft_vpc_private_subnet_01_cidr" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "aft_vpc_private_subnet_02_cidr" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "aft_vpc_public_subnet_01_cidr" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "aft_vpc_public_subnet_02_cidr" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "aft_vpc_endpoints" {
-  type = bool
+  type    = bool
+  default = null
 }
 
 variable "request_framework_archive_path" {
@@ -58,4 +60,20 @@ variable "concurrent_account_factory_actions" {
 
 variable "lambda_runtime_python_version" {
   type = string
+}
+
+variable "backup_recovery_point_retention" {
+  type = number
+}
+
+variable "aft_enable_vpc" {
+  type = bool
+}
+
+variable "aft_customer_vpc_id" {
+  type = string
+}
+
+variable "aft_customer_private_subnets" {
+  type = list(string)
 }
