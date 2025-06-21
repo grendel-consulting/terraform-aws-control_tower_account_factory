@@ -33,6 +33,10 @@ output "cloudwatch_log_group_retention" {
   value = var.cloudwatch_log_group_retention
 }
 
+output "backup_recovery_point_retention" {
+  value = var.backup_recovery_point_retention
+}
+
 output "maximum_concurrent_customizations" {
   value = var.maximum_concurrent_customizations
 }
@@ -63,6 +67,10 @@ output "vcs_provider" {
 
 output "github_enterprise_url" {
   value = var.github_enterprise_url
+}
+
+output "gitlab_selfmanaged_url" {
+  value = var.gitlab_selfmanaged_url
 }
 
 output "account_request_repo_name" {

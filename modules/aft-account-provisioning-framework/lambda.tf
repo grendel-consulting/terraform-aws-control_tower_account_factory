@@ -17,7 +17,7 @@ resource "aws_lambda_function" "create_role" {
   layers           = [var.aft_common_layer_arn]
 
   dynamic "vpc_config" {
-    for_each = var.aft_feature_disable_private_networking ? {} : { k = "v" }
+    for_each = var.aft_enable_vpc ? [1] : []
     content {
       subnet_ids         = var.aft_vpc_private_subnets
       security_group_ids = var.aft_vpc_default_sg
@@ -47,7 +47,7 @@ resource "aws_lambda_function" "tag_account" {
   layers           = [var.aft_common_layer_arn]
 
   dynamic "vpc_config" {
-    for_each = var.aft_feature_disable_private_networking ? {} : { k = "v" }
+    for_each = var.aft_enable_vpc ? [1] : []
     content {
       subnet_ids         = var.aft_vpc_private_subnets
       security_group_ids = var.aft_vpc_default_sg
@@ -76,7 +76,7 @@ resource "aws_lambda_function" "persist_metadata" {
   layers           = [var.aft_common_layer_arn]
 
   dynamic "vpc_config" {
-    for_each = var.aft_feature_disable_private_networking ? {} : { k = "v" }
+    for_each = var.aft_enable_vpc ? [1] : []
     content {
       subnet_ids         = var.aft_vpc_private_subnets
       security_group_ids = var.aft_vpc_default_sg
@@ -107,7 +107,7 @@ resource "aws_lambda_function" "account_metadata_ssm" {
   layers           = [var.aft_common_layer_arn]
 
   dynamic "vpc_config" {
-    for_each = var.aft_feature_disable_private_networking ? {} : { k = "v" }
+    for_each = var.aft_enable_vpc ? [1] : []
     content {
       subnet_ids         = var.aft_vpc_private_subnets
       security_group_ids = var.aft_vpc_default_sg

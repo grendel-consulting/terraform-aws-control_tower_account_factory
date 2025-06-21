@@ -4,6 +4,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from aft_common.aft_utils import sanitize_input_for_logging
 from aft_common.constants import SSM_PARAM_SNS_FAILURE_TOPIC_ARN
 from aft_common.ssm import get_ssm_parameter_value
 from boto3.session import Session
@@ -27,14 +28,14 @@ def send_sns_message(
     logger.info("Sending SNS Message")
     client: SNSClient = session.client("sns")
     response = client.publish(TopicArn=topic, Message=sns_message, Subject=subject)
-    logger.info(response)
+    sanitized_response = sanitize_input_for_logging(response)
+    logger.info(sanitized_response)
     return response
 
 
 def send_lambda_failure_sns_message(
     session: Session, message: str, subject: str, context: LambdaContext
 ) -> None:
-
     msg = f"""An error occurred in the '{context.function_name}' Lambda function.
 For more information, search AWS Request ID '{context.aws_request_id}' in CloudWatch log group '{context.log_group_name}'
 Error Message: {message}"""

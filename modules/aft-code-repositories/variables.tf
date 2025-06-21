@@ -1,16 +1,13 @@
 # Copyright Amazon.com, Inc. or its affiliates. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-variable "aft_feature_disable_private_networking" {
-  type = bool
-}
-
 variable "vpc_id" {
   type = string
 }
 
 variable "subnet_ids" {
-  type = list(string)
+  type    = list(string)
+  default = null
 }
 
 variable "security_group_ids" {
@@ -30,6 +27,10 @@ variable "terraform_distribution" {
 }
 
 variable "github_enterprise_url" {
+  type = string
+}
+
+variable "gitlab_selfmanaged_url" {
   type = string
 }
 
@@ -95,4 +96,8 @@ variable "account_provisioning_customizations_repo_branch" {
 
 variable "global_codebuild_timeout" {
   type = number
+}
+
+variable "aft_enable_vpc" {
+  type = bool
 }

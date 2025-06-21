@@ -1,20 +1,18 @@
 # Copyright Amazon.com, Inc. or its affiliates. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-variable "aft_feature_disable_private_networking" {
-  type = bool
-}
-
 variable "aft_vpc_public_subnets" {
   type = list(string)
 }
 
 variable "aft_vpc_private_subnets" {
-  type = list(string)
+  type    = list(string)
+  default = null
 }
 
 variable "aft_vpc_default_sg" {
-  type = list(string)
+  type    = list(string)
+  default = null
 }
 
 variable "aft_common_layer_arn" {
@@ -50,7 +48,7 @@ variable "log_archive_access_logs_bucket_name" {
 }
 
 variable "log_archive_bucket_object_expiration_days" {
-  type = string
+  type = number
 }
 
 variable "log_archive_account_id" {
@@ -82,4 +80,9 @@ variable "enable_cloudtrail_lambda_function_name" {
 
 variable "lambda_runtime_python_version" {
   type = string
+}
+
+variable "aft_enable_vpc" {
+  type = bool
+
 }
