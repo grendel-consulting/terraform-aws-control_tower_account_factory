@@ -1,10 +1,6 @@
 # Copyright Amazon.com, Inc. or its affiliates. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-variable "aft_vpc_public_subnets" {
-  type = list(string)
-}
-
 variable "aft_vpc_private_subnets" {
   type    = list(string)
   default = null
