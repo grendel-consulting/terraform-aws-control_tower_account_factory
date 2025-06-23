@@ -3,7 +3,7 @@
 
 import argparse
 import logging
-from datetime import datetime
+from datetime import timezone, datetime
 from typing import Any, Dict, Optional, TypedDict
 
 import aft_common.constants
@@ -82,7 +82,7 @@ class AFTMetrics:
     ) -> MetricsPayloadType:
         payload: MetricsPayloadType = {
             "Solution": self.solution_id,
-            "TimeStamp": datetime.utcnow().isoformat(timespec="seconds"),
+            "TimeStamp": datetime.now(tz=timezone.utc).isoformat(timespec="seconds"),
             "Version": None,
             "UUID": None,
             "Data": {},
