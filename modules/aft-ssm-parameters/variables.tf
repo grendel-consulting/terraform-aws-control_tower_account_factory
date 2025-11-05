@@ -255,7 +255,3 @@ variable "aft_version" {
 variable "aft_metrics_reporting" {
   type = string
 }
-
-variable "aft_codepipeline_customizations_bucket_id" {
-  type = string
-}

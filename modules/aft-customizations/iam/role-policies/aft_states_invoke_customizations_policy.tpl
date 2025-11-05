@@ -22,17 +22,6 @@
         {
             "Effect": "Allow",
             "Action": [
-                "kms:GenerateDataKey*",
-                "kms:Encrypt",
-                "kms:Decrypt"
-            ],
-            "Resource": [
-                "${aws_kms_key_aft_arn}"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
                 "events:PutTargets",
                 "events:PutRule",
                 "events:DescribeRule"
@@ -58,15 +47,6 @@
             ],
             "Resource": [
                 "arn:${data_aws_partition_current_partition}:states:${data_aws_region_aft-management_name}:${data_aws_caller_identity_aft-management_account_id}:execution:aft-*"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:GetObject*"
-            ],
-            "Resource": [
-                "${aws_s3_bucket_aft_codepipeline_customizations_bucket_arn}/sfn/*"
             ]
         }
     ]
