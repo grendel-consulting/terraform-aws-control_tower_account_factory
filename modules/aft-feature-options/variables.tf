@@ -19,14 +19,6 @@ variable "cloudwatch_log_group_retention" {
   type = string
 }
 
-variable "cloudwatch_log_group_enable_cmk_encryption" {
-  type = bool
-}
-
-variable "sns_topic_enable_cmk_encryption" {
-  type = bool
-}
-
 variable "aft_kms_key_arn" {
   type = string
 }
