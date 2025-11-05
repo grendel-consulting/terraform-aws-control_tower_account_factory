@@ -42,10 +42,10 @@ resource "aws_lambda_event_source_mapping" "aft_account_request_audit_trigger" {
   maximum_retry_attempts = 1
 }
 
-#tfsec:ignore:aws-cloudwatch-log-group-customer-key
 resource "aws_cloudwatch_log_group" "aft_account_request_audit_trigger" {
   name              = "/aws/lambda/${aws_lambda_function.aft_account_request_audit_trigger.function_name}"
   retention_in_days = var.cloudwatch_log_group_retention
+  kms_key_id        = var.cloudwatch_log_group_enable_cmk_encryption ? aws_kms_key.aft.arn : null
 }
 
 ######## aft_account_request_action_trigger ########
@@ -83,10 +83,10 @@ resource "aws_lambda_event_source_mapping" "aft_account_request_action_trigger" 
   maximum_retry_attempts = 1
 }
 
-#tfsec:ignore:aws-cloudwatch-log-group-customer-key
 resource "aws_cloudwatch_log_group" "aft_account_request_action_trigger" {
   name              = "/aws/lambda/${aws_lambda_function.aft_account_request_action_trigger.function_name}"
   retention_in_days = var.cloudwatch_log_group_retention
+  kms_key_id        = var.cloudwatch_log_group_enable_cmk_encryption ? aws_kms_key.aft.arn : null
 }
 
 ######## aft_controltower_event_logger ########
@@ -125,10 +125,10 @@ resource "aws_lambda_permission" "aft_controltower_event_logger" {
   source_arn    = aws_cloudwatch_event_rule.aft_controltower_event_trigger.arn
 }
 
-#tfsec:ignore:aws-cloudwatch-log-group-customer-key
 resource "aws_cloudwatch_log_group" "aft_controltower_event_logger" {
   name              = "/aws/lambda/${aws_lambda_function.aft_controltower_event_logger.function_name}"
   retention_in_days = var.cloudwatch_log_group_retention
+  kms_key_id        = var.cloudwatch_log_group_enable_cmk_encryption ? aws_kms_key.aft.arn : null
 }
 
 ######## aft_account_request_processor ########
@@ -172,10 +172,10 @@ resource "aws_lambda_permission" "aft_account_request_processor" {
   source_arn    = aws_cloudwatch_event_rule.aft_account_request_processor.arn
 }
 
-#tfsec:ignore:aws-cloudwatch-log-group-customer-key
 resource "aws_cloudwatch_log_group" "aft_account_request_processor" {
   name              = "/aws/lambda/${aws_lambda_function.aft_account_request_processor.function_name}"
   retention_in_days = var.cloudwatch_log_group_retention
+  kms_key_id        = var.cloudwatch_log_group_enable_cmk_encryption ? aws_kms_key.aft.arn : null
 }
 
 ######## aft_invoke_aft_account_provisioning_framework ########
@@ -213,10 +213,10 @@ resource "aws_lambda_permission" "aft_invoke_aft_account_provisioning_framework"
   source_arn    = aws_cloudwatch_event_rule.aft_controltower_event_trigger.arn
 }
 
-#tfsec:ignore:aws-cloudwatch-log-group-customer-key
 resource "aws_cloudwatch_log_group" "aft_invoke_aft_account_provisioning_framework" {
   name              = "/aws/lambda/${aws_lambda_function.aft_invoke_aft_account_provisioning_framework.function_name}"
   retention_in_days = var.cloudwatch_log_group_retention
+  kms_key_id        = var.cloudwatch_log_group_enable_cmk_encryption ? aws_kms_key.aft.arn : null
 }
 
 ######## aft_cleanup_resources ########
@@ -246,8 +246,8 @@ resource "aws_lambda_function" "aft_cleanup_resources" {
   }
 }
 
-#tfsec:ignore:aws-cloudwatch-log-group-customer-key
 resource "aws_cloudwatch_log_group" "aft_cleanup_resources" {
   name              = "/aws/lambda/${aws_lambda_function.aft_cleanup_resources.function_name}"
   retention_in_days = var.cloudwatch_log_group_retention
+  kms_key_id        = var.cloudwatch_log_group_enable_cmk_encryption ? aws_kms_key.aft.arn : null
 }
